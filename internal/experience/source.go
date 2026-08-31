@@ -239,7 +239,7 @@ func CompileSource(sourcePath string, source []byte, contract Denominator, contr
 	if contractDigest == "" {
 		return SemanticIR{}, errors.New("contract digest is required")
 	}
-	ir := SemanticIR{Schema: IRScheme, Model: program.Model, SourcePath: sourcePath, SourceDigest: DigestBytes(source), ContractDigest: contractDigest, Nodes: make([]IRNode, 0, 12)}
+	ir := SemanticIR{Schema: IRSchema, Model: program.Model, SourcePath: sourcePath, SourceDigest: DigestBytes(source), ContractDigest: contractDigest, Nodes: make([]IRNode, 0, 12)}
 	for index, cell := range contract.Cells {
 		activity := program.Activities[index]
 		if activity.Name != cell.Activity || activity.ID != cell.ID || activity.Proof != cell.ProofChoice || activity.Indicator != cell.IndicatorClass || activity.Metric != cell.MetricID || activity.Artifact != cell.Artifact || activity.Evaluator != cell.Evaluator {

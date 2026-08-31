@@ -10,7 +10,7 @@ import (
 )
 
 func GenerateGo(ir SemanticIR, outputPath string) error {
-	if ir.Schema != IRScheme || len(ir.Nodes) != 12 || ir.SourceDigest == "" || ir.ContractDigest == "" {
+	if ir.Schema != IRSchema || len(ir.Nodes) != 12 || ir.SourceDigest == "" || ir.ContractDigest == "" {
 		return errors.New("semantic IR is not generation-ready")
 	}
 	if !filepath.IsAbs(outputPath) {
