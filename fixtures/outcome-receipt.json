@@ -1,0 +1,13 @@
+{
+  "schema": "gooo/experience-memory/outcome-receipt/v1",
+  "receipt_id": "receipt-known-refuted-v1",
+  "candidate_id": "candidate-known-refuted",
+  "semantic_fingerprint": "sha256:4421d52d14a7dec8b0a5e243b8f388ace6b6c2340c70facb1404beb5346a799a",
+  "failure_class": "KNOWN_REFUTED_FAILURE",
+  "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1",
+  "fixture_digest": "sha256:62218cf682fee80f5a2c7fa9543cba42ce0b27452257d96667a5376552e53b98",
+  "outcome": "REFUTED",
+  "observed_version": "v1.0.0",
+  "immutable": true,
+  "receipt_digest": "sha256:5d785e815446ff8150060ce57a62615a432cd9f19615ff401ea15812460a08a0"
+}

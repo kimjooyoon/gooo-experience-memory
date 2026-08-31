@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"refuted-contradictory-observation","class":"REFUTED","mode":"CONTRADICTORY_OBSERVATION","candidate_id":"candidate-known-refuted","expected_state":"REFUTED","expected_reason":"CURRENT_OBSERVATION_CONTRADICTS_KNOWN_REFUTATION"}

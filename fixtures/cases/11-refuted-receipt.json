@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"refuted-malformed-receipt","class":"REFUTED","mode":"MALFORMED_RECEIPT","candidate_id":"candidate-known-refuted","expected_state":"REFUTED","expected_reason":"MALFORMED_RECEIPT_REFUTED"}

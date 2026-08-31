@@ -1,0 +1,74 @@
+name: Gooo experience memory conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gooo-experience-memory-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    env:
+      SUBJECT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout subject
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ env.SUBJECT_SHA }}
+      - name: Install Go 1.27
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.27.0
+          cache: false
+      - name: Verify with Go 1.27 in CI
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$(go env GOVERSION)" = "go1.27.0"
+          before=$(git status --porcelain=v1 -z --untracked-files=all | sha256sum | awk '{print $1}')
+          gofmt_files=$(gofmt -l cmd internal)
+          test -z "$gofmt_files"
+          go vet ./...
+          test_start=$(date +%s%N)
+          go test -json ./... > "$RUNNER_TEMP/go-test.json"
+          test_end=$(date +%s%N)
+          go test -race ./...
+          build_start=$(date +%s%N)
+          go build -trimpath -o "$RUNNER_TEMP/gooo-experience-memory" ./cmd/gooo-experience-memory
+          build_end=$(date +%s%N)
+          after=$(git status --porcelain=v1 -z --untracked-files=all | sha256sum | awk '{print $1}')
+          test "$before" = "$after"
+          printf '%s\n' "$(( (test_end - test_start) / 1000000 ))" > "$RUNNER_TEMP/test-ms"
+          printf '%s\n' "$(( (build_end - build_start) / 1000000 ))" > "$RUNNER_TEMP/build-ms"
+      - name: Evaluate fixed baseline and after pair
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash scripts/conformance.sh \
+            "$RUNNER_TEMP/gooo-experience-memory" \
+            "$SUBJECT_SHA" \
+            "$(go env GOVERSION)" \
+            "$RUNNER_TEMP/go-test.json" \
+            "$(cat "$RUNNER_TEMP/test-ms")" \
+            "$(cat "$RUNNER_TEMP/build-ms")"
+          cat "$RUNNER_TEMP/gooo-experience-memory-artifact/summary.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload evidence asset
+        id: evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-experience-memory-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/gooo-experience-memory-artifact
+          if-no-files-found: error
+      - name: Record artifact identity
+        run: |
+          echo "- artifact id: ${{ steps.evidence.outputs.artifact-id }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- artifact digest: ${{ steps.evidence.outputs.artifact-digest }}" >> "$GITHUB_STEP_SUMMARY"
+

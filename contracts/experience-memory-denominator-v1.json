@@ -1,0 +1,29 @@
+{
+  "schema": "gooo/experience-memory/denominator/v1",
+  "denominator_id": "gooo.denominator.experience-memory.v1",
+  "total": 12,
+  "fixed": true,
+  "proof_choices": ["FOUNDATION", "COHERENCE", "REGRESSION"],
+  "indicator_classes": ["DRIVER", "OUTCOME", "GUARDRAIL"],
+  "proof_totals": {"FOUNDATION": 4, "COHERENCE": 4, "REGRESSION": 4},
+  "indicator_totals": {"DRIVER": 4, "OUTCOME": 4, "GUARDRAIL": 4},
+  "precedence": ["REFUTED", "UNKNOWN", "CLOSED"],
+  "unknown_fields": ["stage", "step", "reason", "unknown_class", "next_operation", "blocked_by"],
+  "no_scores": true,
+  "no_percentages": true,
+  "no_inference": true,
+  "cells": [
+    {"ordinal": 1, "id": "DECLARE_EXPERIENCE_MODEL", "activity": "DeclareExperienceModel", "proof_choice": "FOUNDATION", "indicator_class": "DRIVER", "metric_id": "gooo.metric.experience-memory.model.v1", "metric_path": "ir.model", "artifact": "semantic-ir.json", "evaluator": "CompileSource"},
+    {"ordinal": 2, "id": "PARSE_CANDIDATE_SEMANTICS", "activity": "ParseCandidateSemantics", "proof_choice": "FOUNDATION", "indicator_class": "OUTCOME", "metric_id": "gooo.metric.experience-memory.candidate-semantics.v1", "metric_path": "ir.candidates", "artifact": "semantic-ir.json", "evaluator": "CompileSource"},
+    {"ordinal": 3, "id": "BIND_SCOPE_DIGEST", "activity": "BindScopeDigest", "proof_choice": "FOUNDATION", "indicator_class": "GUARDRAIL", "metric_id": "gooo.metric.experience-memory.scope.v1", "metric_path": "fixture.scope_digest", "artifact": "semantic-ir.json", "evaluator": "CompileSource"},
+    {"ordinal": 4, "id": "BIND_SOURCE_TO_IR", "activity": "BindSourceToIR", "proof_choice": "FOUNDATION", "indicator_class": "DRIVER", "metric_id": "gooo.metric.experience-memory.source-ir.v1", "metric_path": "ir.source_digest", "artifact": "semantic-ir.json", "evaluator": "CompileSource"},
+    {"ordinal": 5, "id": "VERIFY_APPEND_ONLY_MEMORY", "activity": "VerifyAppendOnlyMemory", "proof_choice": "COHERENCE", "indicator_class": "OUTCOME", "metric_id": "gooo.metric.experience-memory.append-only.v1", "metric_path": "memory.record_digest", "artifact": "memory.ndjson", "evaluator": "LoadMemory"},
+    {"ordinal": 6, "id": "VERIFY_IMMUTABLE_RECEIPT", "activity": "VerifyImmutableReceipt", "proof_choice": "COHERENCE", "indicator_class": "GUARDRAIL", "metric_id": "gooo.metric.experience-memory.receipt.v1", "metric_path": "receipt.immutable", "artifact": "outcome-receipt.json", "evaluator": "AssessCandidate"},
+    {"ordinal": 7, "id": "COMPARE_SEMANTIC_MATCH", "activity": "CompareSemanticMatch", "proof_choice": "COHERENCE", "indicator_class": "DRIVER", "metric_id": "gooo.metric.experience-memory.match.v1", "metric_path": "decision.match_basis", "artifact": "evaluation.json", "evaluator": "AssessCandidate"},
+    {"ordinal": 8, "id": "SELECT_WITH_EXPERIENCE", "activity": "SelectWithExperience", "proof_choice": "COHERENCE", "indicator_class": "OUTCOME", "metric_id": "gooo.metric.experience-memory.selection.v1", "metric_path": "after.selected_candidate_id", "artifact": "evaluation.json", "evaluator": "SelectCandidate"},
+    {"ordinal": 9, "id": "PRESERVE_UNKNOWN_TUPLE", "activity": "PreserveUnknownTuple", "proof_choice": "REGRESSION", "indicator_class": "GUARDRAIL", "metric_id": "gooo.metric.experience-memory.unknown.v1", "metric_path": "cases[].unknown", "artifact": "evaluation.json", "evaluator": "ClassifyCase"},
+    {"ordinal": 10, "id": "PRIORITIZE_REFUTED_CONTRADICTION", "activity": "PrioritizeRefutedContradiction", "proof_choice": "REGRESSION", "indicator_class": "DRIVER", "metric_id": "gooo.metric.experience-memory.precedence.v1", "metric_path": "cases[].state", "artifact": "evaluation.json", "evaluator": "ClassifyCase"},
+    {"ordinal": 11, "id": "REPLAY_BASELINE_AFTER", "activity": "ReplayBaselineAfter", "proof_choice": "REGRESSION", "indicator_class": "OUTCOME", "metric_id": "gooo.metric.experience-memory.replay.v1", "metric_path": "replay.mismatches", "artifact": "evaluation.json", "evaluator": "ReplayPair"},
+    {"ordinal": 12, "id": "EMIT_EXACT_EVIDENCE", "activity": "EmitExactEvidence", "proof_choice": "REGRESSION", "indicator_class": "GUARDRAIL", "metric_id": "gooo.metric.experience-memory.report.v1", "metric_path": "metrics", "artifact": "summary.json", "evaluator": "BuildReport"}
+  ]
+}

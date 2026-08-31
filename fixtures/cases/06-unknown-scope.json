@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"unknown-scope-mismatch","class":"UNKNOWN","mode":"SCOPE_MISMATCH","candidate_id":"candidate-scope-drift","expected_state":"UNKNOWN","expected_reason":"SEMANTIC_FINGERPRINT_OR_SCOPE_DIGEST_DIFFERS_FROM_MEMORY"}
