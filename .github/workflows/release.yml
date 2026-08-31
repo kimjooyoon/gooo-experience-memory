@@ -4,6 +4,11 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing or new annotated release tag to verify
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -11,11 +16,14 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - name: Checkout tagged source
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ inputs.tag || github.ref }}
       - name: Install Go 1.27
         uses: actions/setup-go@v6
         with:
@@ -29,21 +37,22 @@ jobs:
         run: |
           set -Eeuo pipefail
           test "$(go env GOVERSION)" = "go1.27.0"
-          tag_ref="refs/tags/$GITHUB_REF_NAME"
+          tag_ref="refs/tags/$RELEASE_TAG"
+          git fetch origin "$tag_ref:$tag_ref"
           tag_type=$(git cat-file -t "$tag_ref" 2>/dev/null || true)
           test "$tag_type" = tag
           commit_sha=$(git rev-parse "$tag_ref^{}")
-          existing_immutable=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$GITHUB_REF_NAME" --jq '.immutable' 2>/dev/null || true)
+          existing_immutable=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq '.immutable' 2>/dev/null || true)
           if test "$existing_immutable" = true; then
             echo "existing immutable release verified; no overwrite attempted"
             echo "existing=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          asset="gooo-experience-memory-$GITHUB_REF_NAME.tar.gz"
-          git archive --format=tar.gz --prefix="gooo-experience-memory-$GITHUB_REF_NAME/" "$commit_sha" > "$RUNNER_TEMP/$asset"
+          asset="gooo-experience-memory-$RELEASE_TAG.tar.gz"
+          git archive --format=tar.gz --prefix="gooo-experience-memory-$RELEASE_TAG/" "$commit_sha" > "$RUNNER_TEMP/$asset"
           asset_digest="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | awk '{print $1}')"
           printf '%s  %s\n' "$asset_digest" "$asset" > "$RUNNER_TEMP/SHA256SUMS"
-          jq -S -n --arg tag "$GITHUB_REF_NAME" --arg commit_sha "$commit_sha" --arg asset "$asset" --arg asset_digest "$asset_digest" \
+          jq -S -n --arg tag "$RELEASE_TAG" --arg commit_sha "$commit_sha" --arg asset "$asset" --arg asset_digest "$asset_digest" \
             '{schema:"gooo/experience-memory/release-manifest/v1",tag:$tag,commit_sha:$commit_sha,asset:$asset,asset_digest:$asset_digest,immutable:true}' \
             > "$RUNNER_TEMP/release-manifest.json"
           echo "asset=$asset" >> "$GITHUB_OUTPUT"
@@ -57,6 +66,6 @@ jobs:
           if test "${{ steps.asset.outputs.existing }}" = true; then
             exit 0
           fi
-          gh release create "$GITHUB_REF_NAME" --verify-tag --title "gooo-experience-memory $GITHUB_REF_NAME" \
+          gh release create "$RELEASE_TAG" --verify-tag --title "gooo-experience-memory $RELEASE_TAG" \
             --notes "Immutable source asset for $GITHUB_SHA. The release manifest binds the archive digest to the annotated tag commit." \
             "$RUNNER_TEMP/${{ steps.asset.outputs.asset }}" "$RUNNER_TEMP/SHA256SUMS" "$RUNNER_TEMP/release-manifest.json"
