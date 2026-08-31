@@ -3,6 +3,7 @@ name: Immutable Gooo experience memory release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,12 +23,22 @@ jobs:
           cache: false
       - name: Confirm tag is annotated and build source asset
         id: asset
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -Eeuo pipefail
           test "$(go env GOVERSION)" = "go1.27.0"
-          test "$(git cat-file -t "$GITHUB_REF_NAME")" = tag
-          commit_sha=$(git rev-parse "$GITHUB_REF_NAME^{}")
+          tag_ref="refs/tags/$GITHUB_REF_NAME"
+          tag_type=$(git cat-file -t "$tag_ref" 2>/dev/null || true)
+          test "$tag_type" = tag
+          commit_sha=$(git rev-parse "$tag_ref^{}")
+          existing_immutable=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$GITHUB_REF_NAME" --jq '.immutable' 2>/dev/null || true)
+          if test "$existing_immutable" = true; then
+            echo "existing immutable release verified; no overwrite attempted"
+            echo "existing=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           asset="gooo-experience-memory-$GITHUB_REF_NAME.tar.gz"
           git archive --format=tar.gz --prefix="gooo-experience-memory-$GITHUB_REF_NAME/" "$commit_sha" > "$RUNNER_TEMP/$asset"
           asset_digest="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | awk '{print $1}')"
@@ -36,13 +47,16 @@ jobs:
             '{schema:"gooo/experience-memory/release-manifest/v1",tag:$tag,commit_sha:$commit_sha,asset:$asset,asset_digest:$asset_digest,immutable:true}' \
             > "$RUNNER_TEMP/release-manifest.json"
           echo "asset=$asset" >> "$GITHUB_OUTPUT"
+          echo "existing=false" >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/release-manifest.json" >> "$GITHUB_STEP_SUMMARY"
       - name: Publish release without overwrite
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -Eeuo pipefail
+          if test "${{ steps.asset.outputs.existing }}" = true; then
+            exit 0
+          fi
           gh release create "$GITHUB_REF_NAME" --verify-tag --title "gooo-experience-memory $GITHUB_REF_NAME" \
             --notes "Immutable source asset for $GITHUB_SHA. The release manifest binds the archive digest to the annotated tag commit." \
             "$RUNNER_TEMP/${{ steps.asset.outputs.asset }}" "$RUNNER_TEMP/SHA256SUMS" "$RUNNER_TEMP/release-manifest.json"
-
