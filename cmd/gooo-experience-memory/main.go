@@ -124,7 +124,7 @@ func evaluate(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintln(stderr, err)
 		return 1
 	}
-	records, memoryDigest, err := experience.LoadMemory(*memoryPath, experience.FixtureDigest(fixture))
+	records, _, err := experience.LoadMemory(*memoryPath, experience.FixtureDigest(fixture))
 	if err != nil {
 		fmt.Fprintln(stderr, err)
 		return 1
