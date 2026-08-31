@@ -1,0 +1,48 @@
+name: Immutable Gooo experience memory release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Install Go 1.27
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.27.0
+          cache: false
+      - name: Confirm tag is annotated and build source asset
+        id: asset
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$(go env GOVERSION)" = "go1.27.0"
+          test "$(git cat-file -t "$GITHUB_REF_NAME")" = tag
+          commit_sha=$(git rev-parse "$GITHUB_REF_NAME^{}")
+          asset="gooo-experience-memory-$GITHUB_REF_NAME.tar.gz"
+          git archive --format=tar.gz --prefix="gooo-experience-memory-$GITHUB_REF_NAME/" "$commit_sha" > "$RUNNER_TEMP/$asset"
+          asset_digest="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | awk '{print $1}')"
+          printf '%s  %s\n' "$asset_digest" "$asset" > "$RUNNER_TEMP/SHA256SUMS"
+          jq -S -n --arg tag "$GITHUB_REF_NAME" --arg commit_sha "$commit_sha" --arg asset "$asset" --arg asset_digest "$asset_digest" \
+            '{schema:"gooo/experience-memory/release-manifest/v1",tag:$tag,commit_sha:$commit_sha,asset:$asset,asset_digest:$asset_digest,immutable:true}' \
+            > "$RUNNER_TEMP/release-manifest.json"
+          echo "asset=$asset" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/release-manifest.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish release without overwrite
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -Eeuo pipefail
+          gh release create "$GITHUB_REF_NAME" --verify-tag --title "gooo-experience-memory $GITHUB_REF_NAME" \
+            --notes "Immutable source asset for $GITHUB_SHA. The release manifest binds the archive digest to the annotated tag commit." \
+            "$RUNNER_TEMP/${{ steps.asset.outputs.asset }}" "$RUNNER_TEMP/SHA256SUMS" "$RUNNER_TEMP/release-manifest.json"
+

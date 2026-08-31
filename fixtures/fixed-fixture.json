@@ -1,0 +1,18 @@
+{
+  "schema": "gooo/experience-memory/fixed-fixture/v1",
+  "fixture_id": "fixed-refuted-recurrence-v1",
+  "version": "v1.0.0",
+  "scope_descriptor": "fixture:gooo-experience-memory/v1|subject:counterexample-selection|denominator:12|policy:avoid-known-refuted",
+  "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1",
+  "candidates": [
+    {"candidate_id": "candidate-known-refuted", "semantic": "guard.add-counterexample-memory", "semantic_fingerprint": "sha256:4421d52d14a7dec8b0a5e243b8f388ace6b6c2340c70facb1404beb5346a799a", "failure_class": "KNOWN_REFUTED_FAILURE", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "rank": 1},
+    {"candidate_id": "candidate-safe", "semantic": "safe.preserve-counterexample", "semantic_fingerprint": "sha256:eecf96890ee70b2730fc890f9abbb7a74a73b09d7bac38d93f7af1cfc01155fc", "failure_class": "NO_KNOWN_FAILURE", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "rank": 2},
+    {"candidate_id": "candidate-fingerprint-drift", "semantic": "guard.add-counterexample-memory;representation=renamed", "semantic_fingerprint": "sha256:2656c67e606a8c57d548295a5d66a1149d93e06d4744e80823539c7dca7bc870", "failure_class": "KNOWN_REFUTED_FAILURE", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "rank": 3},
+    {"candidate_id": "candidate-scope-drift", "semantic": "guard.add-counterexample-memory", "semantic_fingerprint": "sha256:4421d52d14a7dec8b0a5e243b8f388ace6b6c2340c70facb1404beb5346a799a", "failure_class": "KNOWN_REFUTED_FAILURE", "scope_digest": "sha256:31ca51a3beee495cd799295e3c4b97cf6ac2757d082e4422a11752877732a233", "rank": 4},
+    {"candidate_id": "candidate-stale-receipt", "semantic": "guard.requires-current-receipt", "semantic_fingerprint": "sha256:86e59487bc897435de5baa233918abb635183bea5addc54e99a1abf6af84d054", "failure_class": "RECEIPT_FRESHNESS_REQUIRED", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "rank": 5}
+  ],
+  "attempts": [
+    {"attempt_id": "attempt-before-001", "phase": "before", "candidate_id": "candidate-known-refuted", "outcome": "REFUTED", "semantic_fingerprint": "sha256:4421d52d14a7dec8b0a5e243b8f388ace6b6c2340c70facb1404beb5346a799a", "failure_class": "KNOWN_REFUTED_FAILURE", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "observed": true},
+    {"attempt_id": "attempt-after-001", "phase": "after", "candidate_id": "candidate-safe", "outcome": "CLOSED", "semantic_fingerprint": "sha256:eecf96890ee70b2730fc890f9abbb7a74a73b09d7bac38d93f7af1cfc01155fc", "failure_class": "NO_KNOWN_FAILURE", "scope_digest": "sha256:75e82667bc7bdd59bc4de740d99ee619ffd2580f45443ff80457326c7366dda1", "observed": true}
+  ]
+}

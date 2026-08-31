@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"unknown-ambiguous-receipt","class":"UNKNOWN","mode":"AMBIGUOUS_RECEIPT","candidate_id":"candidate-known-refuted","expected_state":"UNKNOWN","expected_reason":"MULTIPLE_EXACT_OUTCOME_RECEIPTS"}

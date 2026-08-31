@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"unknown-stale-receipt","class":"UNKNOWN","mode":"STALE_RECEIPT","candidate_id":"candidate-stale-receipt","expected_state":"UNKNOWN","expected_reason":"STALE_OR_MUTABLE_OUTCOME_RECEIPT"}

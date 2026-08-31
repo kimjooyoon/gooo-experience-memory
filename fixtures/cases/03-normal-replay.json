@@ -1,0 +1,1 @@
+{"schema":"gooo/experience-memory/case/v1","case_id":"normal-replay","class":"normal","mode":"DETERMINISTIC_REPLAY","candidate_id":"candidate-safe","expected_state":"CLOSED","expected_reason":"CANONICAL_NORMAL_CASE_VERIFIED"}

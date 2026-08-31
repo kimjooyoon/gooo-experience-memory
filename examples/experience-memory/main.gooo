@@ -1,0 +1,16 @@
+program gooo-experience-memory v1
+model ExperienceMemory v1
+authority repository_writes=0 local_test_executions=0 cross_project_required_gates=0
+
+activity ordinal=1 id=DECLARE_EXPERIENCE_MODEL name=DeclareExperienceModel proof=FOUNDATION indicator=DRIVER metric=gooo.metric.experience-memory.model.v1 artifact=semantic-ir.json evaluator=CompileSource
+activity ordinal=2 id=PARSE_CANDIDATE_SEMANTICS name=ParseCandidateSemantics proof=FOUNDATION indicator=OUTCOME metric=gooo.metric.experience-memory.candidate-semantics.v1 artifact=semantic-ir.json evaluator=CompileSource
+activity ordinal=3 id=BIND_SCOPE_DIGEST name=BindScopeDigest proof=FOUNDATION indicator=GUARDRAIL metric=gooo.metric.experience-memory.scope.v1 artifact=semantic-ir.json evaluator=CompileSource
+activity ordinal=4 id=BIND_SOURCE_TO_IR name=BindSourceToIR proof=FOUNDATION indicator=DRIVER metric=gooo.metric.experience-memory.source-ir.v1 artifact=semantic-ir.json evaluator=CompileSource
+activity ordinal=5 id=VERIFY_APPEND_ONLY_MEMORY name=VerifyAppendOnlyMemory proof=COHERENCE indicator=OUTCOME metric=gooo.metric.experience-memory.append-only.v1 artifact=memory.ndjson evaluator=LoadMemory
+activity ordinal=6 id=VERIFY_IMMUTABLE_RECEIPT name=VerifyImmutableReceipt proof=COHERENCE indicator=GUARDRAIL metric=gooo.metric.experience-memory.receipt.v1 artifact=outcome-receipt.json evaluator=AssessCandidate
+activity ordinal=7 id=COMPARE_SEMANTIC_MATCH name=CompareSemanticMatch proof=COHERENCE indicator=DRIVER metric=gooo.metric.experience-memory.match.v1 artifact=evaluation.json evaluator=AssessCandidate
+activity ordinal=8 id=SELECT_WITH_EXPERIENCE name=SelectWithExperience proof=COHERENCE indicator=OUTCOME metric=gooo.metric.experience-memory.selection.v1 artifact=evaluation.json evaluator=SelectCandidate
+activity ordinal=9 id=PRESERVE_UNKNOWN_TUPLE name=PreserveUnknownTuple proof=REGRESSION indicator=GUARDRAIL metric=gooo.metric.experience-memory.unknown.v1 artifact=evaluation.json evaluator=ClassifyCase
+activity ordinal=10 id=PRIORITIZE_REFUTED_CONTRADICTION name=PrioritizeRefutedContradiction proof=REGRESSION indicator=DRIVER metric=gooo.metric.experience-memory.precedence.v1 artifact=evaluation.json evaluator=ClassifyCase
+activity ordinal=11 id=REPLAY_BASELINE_AFTER name=ReplayBaselineAfter proof=REGRESSION indicator=OUTCOME metric=gooo.metric.experience-memory.replay.v1 artifact=evaluation.json evaluator=ReplayPair
+activity ordinal=12 id=EMIT_EXACT_EVIDENCE name=EmitExactEvidence proof=REGRESSION indicator=GUARDRAIL metric=gooo.metric.experience-memory.report.v1 artifact=summary.json evaluator=BuildReport
