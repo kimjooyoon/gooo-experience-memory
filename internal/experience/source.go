@@ -104,11 +104,17 @@ func parseAuthority(values map[string]string) (Authority, error) {
 		return parsed, nil
 	}
 	writes, err := read("repository_writes")
-	if err != nil { return Authority{}, err }
+	if err != nil {
+		return Authority{}, err
+	}
 	local, err := read("local_test_executions")
-	if err != nil { return Authority{}, err }
+	if err != nil {
+		return Authority{}, err
+	}
 	gates, err := read("cross_project_required_gates")
-	if err != nil { return Authority{}, err }
+	if err != nil {
+		return Authority{}, err
+	}
 	return Authority{RepositoryWrites: writes, LocalTestExecutions: local, CrossProjectRequiredGates: gates}, nil
 }
 
@@ -121,25 +127,56 @@ func parseActivity(values map[string]string, line int) (SourceActivity, error) {
 		return value, nil
 	}
 	ordinalText, err := read("ordinal")
-	if err != nil { return SourceActivity{}, err }
+	if err != nil {
+		return SourceActivity{}, err
+	}
 	ordinal, err := strconv.Atoi(ordinalText)
-	if err != nil || ordinal < 1 { return SourceActivity{}, fmt.Errorf("line %d: activity ordinal is invalid", line) }
-	id, err := read("id"); if err != nil { return SourceActivity{}, err }
-	name, err := read("name"); if err != nil { return SourceActivity{}, err }
-	proof, err := read("proof"); if err != nil { return SourceActivity{}, err }
-	indicator, err := read("indicator"); if err != nil { return SourceActivity{}, err }
-	metric, err := read("metric"); if err != nil { return SourceActivity{}, err }
-	artifact, err := read("artifact"); if err != nil { return SourceActivity{}, err }
-	evaluator, err := read("evaluator"); if err != nil { return SourceActivity{}, err }
+	if err != nil || ordinal < 1 {
+		return SourceActivity{}, fmt.Errorf("line %d: activity ordinal is invalid", line)
+	}
+	id, err := read("id")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	name, err := read("name")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	proof, err := read("proof")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	indicator, err := read("indicator")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	metric, err := read("metric")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	artifact, err := read("artifact")
+	if err != nil {
+		return SourceActivity{}, err
+	}
+	evaluator, err := read("evaluator")
+	if err != nil {
+		return SourceActivity{}, err
+	}
 	return SourceActivity{Ordinal: ordinal, ID: id, Name: name, Proof: proof, Indicator: indicator, Metric: metric, Artifact: artifact, Evaluator: evaluator, SourceLine: line}, nil
 }
 
 func LoadDenominator(path string) (Denominator, string, error) {
 	data, err := os.ReadFile(path)
-	if err != nil { return Denominator{}, "", err }
+	if err != nil {
+		return Denominator{}, "", err
+	}
 	var contract Denominator
-	if err := json.Unmarshal(data, &contract); err != nil { return Denominator{}, "", err }
-	if err := ValidateDenominator(contract); err != nil { return Denominator{}, "", err }
+	if err := json.Unmarshal(data, &contract); err != nil {
+		return Denominator{}, "", err
+	}
+	if err := ValidateDenominator(contract); err != nil {
+		return Denominator{}, "", err
+	}
 	return contract, DigestBytes(data), nil
 }
 
@@ -152,10 +189,18 @@ func ValidateDenominator(contract Denominator) error {
 	}
 	for _, field := range []string{"stage", "step", "reason", "unknown_class", "next_operation", "blocked_by"} {
 		found := false
-		for _, actual := range contract.UnknownFields { if actual == field { found = true } }
-		if !found { return fmt.Errorf("unknown field %q is not preserved", field) }
+		for _, actual := range contract.UnknownFields {
+			if actual == field {
+				found = true
+			}
+		}
+		if !found {
+			return fmt.Errorf("unknown field %q is not preserved", field)
+		}
 	}
-	if !contract.NoScores || !contract.NoPercentages || !contract.NoInference { return errors.New("score, percentage, and inference claims must be disabled") }
+	if !contract.NoScores || !contract.NoPercentages || !contract.NoInference {
+		return errors.New("score, percentage, and inference claims must be disabled")
+	}
 	proofs := map[string]int{}
 	indicators := map[string]int{}
 	seenIDs := map[string]bool{}
@@ -167,17 +212,33 @@ func ValidateDenominator(contract Denominator) error {
 		proofs[cell.ProofChoice]++
 		indicators[cell.IndicatorClass]++
 	}
-	for _, choice := range contract.ProofChoices { if proofs[choice] != 4 || contract.ProofTotals[choice] != 4 { return fmt.Errorf("proof balance for %s is not 4/4", choice) } }
-	for _, class := range contract.IndicatorClasses { if indicators[class] != 4 || contract.IndicatorTotals[class] != 4 { return fmt.Errorf("indicator balance for %s is not 4/4", class) } }
+	for _, choice := range contract.ProofChoices {
+		if proofs[choice] != 4 || contract.ProofTotals[choice] != 4 {
+			return fmt.Errorf("proof balance for %s is not 4/4", choice)
+		}
+	}
+	for _, class := range contract.IndicatorClasses {
+		if indicators[class] != 4 || contract.IndicatorTotals[class] != 4 {
+			return fmt.Errorf("indicator balance for %s is not 4/4", class)
+		}
+	}
 	return nil
 }
 
 func CompileSource(sourcePath string, source []byte, contract Denominator, contractDigest string) (SemanticIR, error) {
-	if err := ValidateDenominator(contract); err != nil { return SemanticIR{}, err }
+	if err := ValidateDenominator(contract); err != nil {
+		return SemanticIR{}, err
+	}
 	program, err := ParseProgram(source)
-	if err != nil { return SemanticIR{}, err }
-	if program.Authority != (Authority{}) { return SemanticIR{}, errors.New("source authority must be zero") }
-	if contractDigest == "" { return SemanticIR{}, errors.New("contract digest is required") }
+	if err != nil {
+		return SemanticIR{}, err
+	}
+	if program.Authority != (Authority{}) {
+		return SemanticIR{}, errors.New("source authority must be zero")
+	}
+	if contractDigest == "" {
+		return SemanticIR{}, errors.New("contract digest is required")
+	}
 	ir := SemanticIR{Schema: IRScheme, Model: program.Model, SourcePath: sourcePath, SourceDigest: DigestBytes(source), ContractDigest: contractDigest, Nodes: make([]IRNode, 0, 12)}
 	for index, cell := range contract.Cells {
 		activity := program.Activities[index]
@@ -191,13 +252,17 @@ func CompileSource(sourcePath string, source []byte, contract Denominator, contr
 
 func LoadJSON(path string, value any) error {
 	data, err := os.ReadFile(path)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	return json.Unmarshal(data, value)
 }
 
 func LoadFixture(path string) (FixedFixture, error) {
 	var fixture FixedFixture
-	if err := LoadJSON(path, &fixture); err != nil { return FixedFixture{}, err }
+	if err := LoadJSON(path, &fixture); err != nil {
+		return FixedFixture{}, err
+	}
 	if fixture.Schema != FixtureSchema || fixture.FixtureID == "" || fixture.Version == "" || fixture.ScopeDescriptor == "" || !validDigest(fixture.ScopeDigest) || fixture.ScopeDigest != DigestText(fixture.ScopeDescriptor) || len(fixture.Candidates) != 5 || len(fixture.Attempts) != 2 {
 		return FixedFixture{}, errors.New("fixed fixture identity, scope, or cardinality is invalid")
 	}
@@ -209,22 +274,32 @@ func LoadFixture(path string) (FixedFixture, error) {
 		seen[candidate.CandidateID] = true
 	}
 	for _, attempt := range fixture.Attempts {
-		if !attempt.Observed || attempt.Phase == "" || attempt.Outcome == "" || !validDigest(attempt.SemanticFingerprint) || attempt.ScopeDigest == "" { return FixedFixture{}, errors.New("invalid observed attempt") }
+		if !attempt.Observed || attempt.Phase == "" || attempt.Outcome == "" || !validDigest(attempt.SemanticFingerprint) || attempt.ScopeDigest == "" {
+			return FixedFixture{}, errors.New("invalid observed attempt")
+		}
 	}
 	return fixture, nil
 }
 
 func LoadCases(path string) ([]CanonicalCase, error) {
 	paths, err := filepath.Glob(filepath.Join(path, "*.json"))
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 	sort.Strings(paths)
-	if len(paths) != 12 { return nil, fmt.Errorf("canonical case denominator requires exactly 12 files, found %d", len(paths)) }
+	if len(paths) != 12 {
+		return nil, fmt.Errorf("canonical case denominator requires exactly 12 files, found %d", len(paths))
+	}
 	result := make([]CanonicalCase, 0, len(paths))
 	seen := map[string]bool{}
 	for _, path := range paths {
 		var item CanonicalCase
-		if err := LoadJSON(path, &item); err != nil { return nil, err }
-		if item.Schema != CaseSchema || item.CaseID == "" || seen[item.CaseID] || item.Class == "" || item.Mode == "" || item.ExpectedState == "" { return nil, fmt.Errorf("invalid canonical case %s", path) }
+		if err := LoadJSON(path, &item); err != nil {
+			return nil, err
+		}
+		if item.Schema != CaseSchema || item.CaseID == "" || seen[item.CaseID] || item.Class == "" || item.Mode == "" || item.ExpectedState == "" {
+			return nil, fmt.Errorf("invalid canonical case %s", path)
+		}
 		seen[item.CaseID] = true
 		result = append(result, item)
 	}

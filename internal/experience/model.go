@@ -31,35 +31,35 @@ type Authority struct {
 }
 
 type SourceProgram struct {
-	Schema      string          `json:"schema"`
-	Model       string          `json:"model"`
-	ModelVersion string         `json:"model_version"`
-	Authority   Authority       `json:"authority"`
-	Activities  []SourceActivity `json:"activities"`
+	Schema       string           `json:"schema"`
+	Model        string           `json:"model"`
+	ModelVersion string           `json:"model_version"`
+	Authority    Authority        `json:"authority"`
+	Activities   []SourceActivity `json:"activities"`
 }
 
 type SourceActivity struct {
-	Ordinal   int    `json:"ordinal"`
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Proof     string `json:"proof_choice"`
-	Indicator string `json:"indicator_class"`
-	Metric    string `json:"metric_id"`
-	Artifact  string `json:"artifact"`
-	Evaluator string `json:"evaluator"`
-	SourceLine int   `json:"source_line"`
+	Ordinal    int    `json:"ordinal"`
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	Proof      string `json:"proof_choice"`
+	Indicator  string `json:"indicator_class"`
+	Metric     string `json:"metric_id"`
+	Artifact   string `json:"artifact"`
+	Evaluator  string `json:"evaluator"`
+	SourceLine int    `json:"source_line"`
 }
 
 type Cell struct {
-	Ordinal       int    `json:"ordinal"`
-	ID            string `json:"id"`
-	Activity      string `json:"activity"`
-	ProofChoice   string `json:"proof_choice"`
+	Ordinal        int    `json:"ordinal"`
+	ID             string `json:"id"`
+	Activity       string `json:"activity"`
+	ProofChoice    string `json:"proof_choice"`
 	IndicatorClass string `json:"indicator_class"`
-	MetricID      string `json:"metric_id"`
-	MetricPath    string `json:"metric_path"`
-	Artifact      string `json:"artifact"`
-	Evaluator     string `json:"evaluator"`
+	MetricID       string `json:"metric_id"`
+	MetricPath     string `json:"metric_path"`
+	Artifact       string `json:"artifact"`
+	Evaluator      string `json:"evaluator"`
 }
 
 type Denominator struct {
@@ -80,25 +80,25 @@ type Denominator struct {
 }
 
 type IRNode struct {
-	Ordinal       int    `json:"ordinal"`
-	ID            string `json:"id"`
-	Activity      string `json:"activity"`
-	SourceLine    int    `json:"source_line"`
-	ProofChoice   string `json:"proof_choice"`
+	Ordinal        int    `json:"ordinal"`
+	ID             string `json:"id"`
+	Activity       string `json:"activity"`
+	SourceLine     int    `json:"source_line"`
+	ProofChoice    string `json:"proof_choice"`
 	IndicatorClass string `json:"indicator_class"`
-	MetricID      string `json:"metric_id"`
-	MetricPath    string `json:"metric_path"`
-	Artifact      string `json:"artifact"`
-	Evaluator     string `json:"evaluator"`
+	MetricID       string `json:"metric_id"`
+	MetricPath     string `json:"metric_path"`
+	Artifact       string `json:"artifact"`
+	Evaluator      string `json:"evaluator"`
 }
 
 type SemanticIR struct {
-	Schema        string    `json:"schema"`
-	Model         string    `json:"model"`
-	SourcePath    string    `json:"source_path"`
-	SourceDigest  string    `json:"source_digest"`
+	Schema         string   `json:"schema"`
+	Model          string   `json:"model"`
+	SourcePath     string   `json:"source_path"`
+	SourceDigest   string   `json:"source_digest"`
 	ContractDigest string   `json:"contract_digest"`
-	Nodes         []IRNode `json:"nodes"`
+	Nodes          []IRNode `json:"nodes"`
 }
 
 type Candidate struct {
@@ -122,13 +122,13 @@ type Attempt struct {
 }
 
 type FixedFixture struct {
-	Schema           string     `json:"schema"`
-	FixtureID        string     `json:"fixture_id"`
-	Version          string     `json:"version"`
-	ScopeDescriptor  string     `json:"scope_descriptor"`
-	ScopeDigest      string     `json:"scope_digest"`
-	Candidates       []Candidate `json:"candidates"`
-	Attempts         []Attempt  `json:"attempts"`
+	Schema          string      `json:"schema"`
+	FixtureID       string      `json:"fixture_id"`
+	Version         string      `json:"version"`
+	ScopeDescriptor string      `json:"scope_descriptor"`
+	ScopeDigest     string      `json:"scope_digest"`
+	Candidates      []Candidate `json:"candidates"`
+	Attempts        []Attempt   `json:"attempts"`
 }
 
 type OutcomeReceipt struct {
@@ -146,17 +146,17 @@ type OutcomeReceipt struct {
 }
 
 type MemoryRecord struct {
-	Schema              string         `json:"schema"`
-	RecordID            string         `json:"record_id"`
-	Ordinal             int            `json:"ordinal"`
-	Kind                string         `json:"kind"`
-	FixtureDigest       string         `json:"fixture_digest"`
-	SemanticFingerprint string         `json:"semantic_fingerprint"`
-	FailureClass        string         `json:"failure_class"`
-	ScopeDigest         string         `json:"scope_digest"`
-	OutcomeReceipt      OutcomeReceipt `json:"outcome_receipt"`
-	PreviousRecordDigest string        `json:"previous_record_digest"`
-	RecordDigest        string         `json:"record_digest"`
+	Schema               string         `json:"schema"`
+	RecordID             string         `json:"record_id"`
+	Ordinal              int            `json:"ordinal"`
+	Kind                 string         `json:"kind"`
+	FixtureDigest        string         `json:"fixture_digest"`
+	SemanticFingerprint  string         `json:"semantic_fingerprint"`
+	FailureClass         string         `json:"failure_class"`
+	ScopeDigest          string         `json:"scope_digest"`
+	OutcomeReceipt       OutcomeReceipt `json:"outcome_receipt"`
+	PreviousRecordDigest string         `json:"previous_record_digest"`
+	RecordDigest         string         `json:"record_digest"`
 }
 
 type UnknownTuple struct {
@@ -213,7 +213,7 @@ type SelectionSnapshot struct {
 	Phase               string              `json:"phase"`
 	State               string              `json:"state"`
 	SelectedCandidateID string              `json:"selected_candidate_id"`
-	SelectedReason     string              `json:"selected_reason"`
+	SelectedReason      string              `json:"selected_reason"`
 	CandidateCount      int                 `json:"candidate_count"`
 	Candidates          []CandidateDecision `json:"candidates"`
 }
@@ -241,39 +241,39 @@ type InventoryMetrics struct {
 }
 
 type Metrics struct {
-	AttemptsObserved              int             `json:"attempts_observed"`
-	MemoryRecords                 int             `json:"memory_records"`
-	CandidateCount                int             `json:"candidate_count"`
-	KnownRefutedRecurrencesBefore int             `json:"known_refuted_recurrences_before"`
-	KnownRefutedRecurrencesAfter  int             `json:"known_refuted_recurrences_after"`
-	AvoidedRefutedCandidates      int             `json:"avoided_refuted_candidates"`
-	NewUnknownCandidates          int             `json:"new_unknown_candidates"`
-	ReplayComparisons             int             `json:"replay_comparisons"`
-	ReplayMismatches              int             `json:"replay_mismatches"`
-	PeakRSSKiB                    int             `json:"peak_rss_kib"`
-	WallMS                        int             `json:"wall_ms"`
-	GoPhysicalLines               int             `json:"go_physical_lines"`
-	GoFiles                       int             `json:"go_files"`
-	GoooPhysicalLines             int             `json:"gooo_physical_lines"`
-	GoooFiles                     int             `json:"gooo_files"`
-	DescendantDirs                int             `json:"descendant_dirs"`
-	Tests                         TestMetrics     `json:"tests"`
+	AttemptsObserved              int              `json:"attempts_observed"`
+	MemoryRecords                 int              `json:"memory_records"`
+	CandidateCount                int              `json:"candidate_count"`
+	KnownRefutedRecurrencesBefore int              `json:"known_refuted_recurrences_before"`
+	KnownRefutedRecurrencesAfter  int              `json:"known_refuted_recurrences_after"`
+	AvoidedRefutedCandidates      int              `json:"avoided_refuted_candidates"`
+	NewUnknownCandidates          int              `json:"new_unknown_candidates"`
+	ReplayComparisons             int              `json:"replay_comparisons"`
+	ReplayMismatches              int              `json:"replay_mismatches"`
+	PeakRSSKiB                    int              `json:"peak_rss_kib"`
+	WallMS                        int              `json:"wall_ms"`
+	GoPhysicalLines               int              `json:"go_physical_lines"`
+	GoFiles                       int              `json:"go_files"`
+	GoooPhysicalLines             int              `json:"gooo_physical_lines"`
+	GoooFiles                     int              `json:"gooo_files"`
+	DescendantDirs                int              `json:"descendant_dirs"`
+	Tests                         TestMetrics      `json:"tests"`
 	Inventory                     InventoryMetrics `json:"inventory"`
-	Authority                     Authority       `json:"authority"`
+	Authority                     Authority        `json:"authority"`
 }
 
 type Binding struct {
-	Ordinal          int    `json:"ordinal"`
-	CellID           string `json:"cell_id"`
-	Activity         string `json:"activity"`
-	SourcePath       string `json:"source_path"`
-	SourceLine       int    `json:"source_line"`
-	SourceDigest     string `json:"source_digest"`
-	IRNode           string `json:"ir_node"`
-	GeneratedSymbol  string `json:"generated_symbol"`
-	GeneratedDigest  string `json:"generated_go_digest"`
-	Evaluator        string `json:"evaluator"`
-	MetricID         string `json:"metric_id"`
+	Ordinal         int    `json:"ordinal"`
+	CellID          string `json:"cell_id"`
+	Activity        string `json:"activity"`
+	SourcePath      string `json:"source_path"`
+	SourceLine      int    `json:"source_line"`
+	SourceDigest    string `json:"source_digest"`
+	IRNode          string `json:"ir_node"`
+	GeneratedSymbol string `json:"generated_symbol"`
+	GeneratedDigest string `json:"generated_go_digest"`
+	Evaluator       string `json:"evaluator"`
+	MetricID        string `json:"metric_id"`
 }
 
 type Balance struct {
@@ -282,32 +282,32 @@ type Balance struct {
 }
 
 type Report struct {
-	Schema             string             `json:"schema"`
-	Decision           string             `json:"decision"`
-	State              string             `json:"state"`
-	Precedence         []string           `json:"precedence"`
-	SourcePath         string             `json:"source_path"`
-	SourceDigest       string             `json:"source_digest"`
-	SemanticIRDigest   string             `json:"semantic_ir_digest"`
-	GeneratedGoDigest  string             `json:"generated_go_digest"`
-	ContractDigest     string             `json:"contract_digest"`
-	FixtureDigest      string             `json:"fixture_digest"`
-	MemoryDigest       string             `json:"memory_digest"`
-	ReceiptDigest      string             `json:"receipt_digest"`
-	FixedDenominator   int                `json:"fixed_denominator"`
-	Proofs             []Balance          `json:"proofs"`
-	Indicators         []Balance          `json:"indicators"`
-	Bindings           []Binding          `json:"bindings"`
-	CanonicalCases     []CaseResult       `json:"canonical_cases"`
-	CanonicalCounts    map[string]int     `json:"canonical_counts"`
-	Baseline           SelectionSnapshot  `json:"baseline"`
-	After              SelectionSnapshot  `json:"after"`
-	Replay             ReplayMetrics      `json:"replay"`
-	Metrics            Metrics            `json:"metrics"`
-	Authority          Authority          `json:"authority"`
-	AppendOnly         bool               `json:"append_only"`
-	ExternalInputsReadOnly bool           `json:"external_inputs_read_only"`
-	RootReadmeExcluded bool               `json:"root_readme_excluded"`
+	Schema                 string            `json:"schema"`
+	Decision               string            `json:"decision"`
+	State                  string            `json:"state"`
+	Precedence             []string          `json:"precedence"`
+	SourcePath             string            `json:"source_path"`
+	SourceDigest           string            `json:"source_digest"`
+	SemanticIRDigest       string            `json:"semantic_ir_digest"`
+	GeneratedGoDigest      string            `json:"generated_go_digest"`
+	ContractDigest         string            `json:"contract_digest"`
+	FixtureDigest          string            `json:"fixture_digest"`
+	MemoryDigest           string            `json:"memory_digest"`
+	ReceiptDigest          string            `json:"receipt_digest"`
+	FixedDenominator       int               `json:"fixed_denominator"`
+	Proofs                 []Balance         `json:"proofs"`
+	Indicators             []Balance         `json:"indicators"`
+	Bindings               []Binding         `json:"bindings"`
+	CanonicalCases         []CaseResult      `json:"canonical_cases"`
+	CanonicalCounts        map[string]int    `json:"canonical_counts"`
+	Baseline               SelectionSnapshot `json:"baseline"`
+	After                  SelectionSnapshot `json:"after"`
+	Replay                 ReplayMetrics     `json:"replay"`
+	Metrics                Metrics           `json:"metrics"`
+	Authority              Authority         `json:"authority"`
+	AppendOnly             bool              `json:"append_only"`
+	ExternalInputsReadOnly bool              `json:"external_inputs_read_only"`
+	RootReadmeExcluded     bool              `json:"root_readme_excluded"`
 }
 
 func (r Report) JSON() ([]byte, error) {
